@@ -152,28 +152,56 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-   
-      // Check for empty fields
-      const requiredFields = ['name', 'email', 'country', 'state', 'experience', 'linkedin', 'number', 'skills', 'position', 'education'];
-      const emptyFields = requiredFields.filter(field => !formData[field].trim());
-    
-      if (emptyFields.length > 0) {
-        alert("Please fill in all fields before submitting.");
-
-        return;
-      }
-   
-    
-    emailjs.send('service_l0u1r2u', 'template_0y3wvy7', formData, 'xklh-Mc4JkQsNpiXm')
+  
+    // Check for empty fields
+    const requiredFields = [
+      'name', 'email', 'country', 'state', 'experience', 'linkedin', 'number', 'skills', 'position', 'education'
+    ];
+    const emptyFields = requiredFields.filter(field => !formData[field]?.trim());
+  
+    if (emptyFields.length > 0) {
+      alert("Please fill in all required fields before submitting.");
+      return;
+    }
+  
+    // Prepare the form data to match the EmailJS template
+    const templateParams = {
+      full_name: formData.name,
+      email_address: formData.email,
+      phone_number: formData.number,
+      linkedin_profile_url: formData.linkedin,
+      address: formData.address || 'Not provided',
+      job_title: selectedJobTitle,
+      job_id: `ID-${selectedJobTitle.replace(/\s+/g, '-').toUpperCase()}`,
+      years_of_experience: formData.experience,
+      highest_educational_qualification: formData.education,
+      skills: formData.skills,
+      portfolio_upload: formData.portfolio_upload || 'Not provided',
+      certifications_upload: formData.certifications_upload || 'Not provided',
+      custom_question_1: formData.custom_question_1 || 'Not answered',
+      custom_question_2: formData.custom_question_2 || 'Not answered',
+      salary_expectations: formData.salary_expectations || 'Not provided',
+      availability: formData.availability || 'Not provided',
+      reference_name: formData.reference_name || 'Not provided',
+      reference_contact: formData.reference_contact || 'Not provided',
+      reference_relationship: formData.reference_relationship || 'Not provided',
+      terms_conditions: formData.terms_conditions ? 'Yes' : 'No',
+      background_check: formData.background_check ? 'Yes' : 'No'
+    };
+  
+    // Send the form data using EmailJS
+    emailjs.send('service_l0u1r2u', 'template_0y3wvy7', templateParams, 'xklh-Mc4JkQsNpiXm')
       .then((response) => {
         console.log('SUCCESS!', response.status, response.text);
+        alert('Application submitted successfully!');
       }, (err) => {
         console.error('FAILED...', err);
+        alert('Failed to submit application. Please try again.');
       });
-
+  
     handleCloseModal(); // Optionally close the modal after submission
   };
-
+  
 
   const filteredPositions = openingsPositions.filter((position) =>
     position.title.toLowerCase().includes(searchQuery.toLowerCase())
