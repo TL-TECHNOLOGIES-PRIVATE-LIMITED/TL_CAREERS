@@ -2,19 +2,20 @@ import React, { useState } from 'react';
 import { CiSearch } from 'react-icons/ci';
 import './App.css'; // Ensure to include Tailwind's CSS
 import Navbar from './components/Navbar';
-import { FaLocationArrow, FaPhone, FaReact } from "react-icons/fa";
-import PositionCard from './components/PositionGrid';
+import { FaChevronDown, FaChevronUp, FaLocationArrow, FaPhone, FaReact } from "react-icons/fa";
+// import PositionCard from './components/PositionGrid';
 import { SiFlutter, SiAdobephotoshop } from "react-icons/si";
 import { FaCode } from "react-icons/fa";
 import emailjs from 'emailjs-com';
 import logo from './img/Logotl.png'
-import PositionGrid from './components/PositionGrid';
+// import PositionGrid from './components/PositionGrid';
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedJobTitle, setSelectedJobTitle] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [expandedIndex, setExpandedIndex] = useState(null);
 
 
   const [formData, setFormData] = useState({
@@ -33,84 +34,47 @@ function App() {
   const openingsPositions = [
     {
       title: "React Developer",
+      location: "Remote",
+      type: "Full-time",
       icon: <FaReact />,
       experience: "2+ years",
       responsibility: "Develop and maintain React applications.",
-      fullTime: true,
+      details: "We are seeking an experienced React Developer to join our team. The ideal candidate will have a background in building web applications using React, JavaScript, HTML, and CSS."
     },
     {
       title: "Full stack Developer",
+      location: "San Francisco, CA",
+      type: "Full-time",
       icon: <FaCode />,
       experience: "1+ years",
       responsibility: "Work on server-side logic and database management.",
-      fullTime: true,
+      details: "We are seeking a Full stack Developer to join our team. You will work on both frontend and backend development tasks, and be responsible for building, testing, and deploying new features."
     },
     {
       title: "Flutter Developer",
+      location: "New York, NY",
+      type: "Part-time",
       icon: <SiFlutter />,
       experience: "1+ year",
       responsibility: "Design user interfaces and improve user experiences.",
-      fullTime: false,
+      details: "Join our team as a Flutter Developer. You will be responsible for building high-quality, innovative, and fully performing mobile applications that comply with coding standards and technical design."
     },
     {
       title: "Graphic Designer",
+      location: "Remote",
+      type: "Part-time",
       icon: <SiAdobephotoshop />,
       experience: "1+ year",
       responsibility: "Design user interfaces and improve user experiences.",
-      fullTime: false,
-    },
-    {
-      title: "Graphic Designer",
-      icon: <SiAdobephotoshop />,
-      experience: "1+ year",
-      responsibility: "Design user interfaces and improve user experiences.",
-      fullTime: false,
-    },
-    {
-      title: "Graphic Designer",
-      icon: <SiAdobephotoshop />,
-      experience: "1+ year",
-      responsibility: "Design user interfaces and improve user experiences.",
-      fullTime: false,
-    },
-    {
-      title: "Graphic Designer",
-      icon: <SiAdobephotoshop />,
-      experience: "1+ year",
-      responsibility: "Design user interfaces and improve user experiences.",
-      fullTime: false,
-    },
-    {
-      title: "Graphic Designer",
-      icon: <SiAdobephotoshop />,
-      experience: "1+ year",
-      responsibility: "Design user interfaces and improve user experiences.",
-      fullTime: false,
-    },
-    {
-      title: "Graphic Designer",
-      icon: <SiAdobephotoshop />,
-      experience: "1+ year",
-      responsibility: "Design user interfaces and improve user experiences.",
-      fullTime: false,
-    },
-    {
-      title: "Graphic Designer",
-      icon: <SiAdobephotoshop />,
-      experience: "1+ year",
-      responsibility: "Design user interfaces and improve user experiences.",
-      fullTime: false,
-    },
-    {
-      title: "Graphic Designer",
-      icon: <SiAdobephotoshop />,
-      experience: "1+ year",
-      responsibility: "Design user interfaces and improve user experiences.",
-      fullTime: false,
+      details: "We are looking for a talented Graphic Designer to create amazing user experiences. The ideal candidate should have an eye for clean and artful design, possess superior UI skills and be able to translate high-level requirements into interaction flows and artifacts."
     },
     // Add more positions as needed
   ];
-
+  const toggleDetails = (index) => {
+    console.log("Toggling index:", index);
+    setExpandedIndex(expandedIndex === index ? null : index);
+  };
+  
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -192,7 +156,7 @@ function App() {
             we are looking for passionate candidates to join us in our mission. We value flat hierarchies, clear communication, and full ownership and responsibility
             <span className='text-black text-3xl'>"</span>
           </p> */}
-          <div className='w-full flex justify-between items-center gap-6 flex-wrap'>
+          <div className='w-full flex justify-between items-center  gap-6 flex-wrap'>
             <h1 className='text-4xl w-fit font-light text-black  '>
               Opening Positions <span className="text-4xl text-red-500 ">{filteredPositions.length}</span>
             </h1>
@@ -210,10 +174,70 @@ function App() {
               <CiSearch />
               </div>
             </div>
-
-            <div className="p-6">
-      <PositionGrid positions={openingsPositions} handleButtonClick={handleButtonClick} />
+            <main className="container mx-auto px-4">
+  <div className="bg-white shadow rounded-lg">
+    <div className="block md:hidden">
+      {filteredPositions.map((position, index) => (
+        <div key={index} className="border-b border-gray-200 p-4">
+          <div className="flex justify-between items-center">
+            <div className="font-bold text-lg">{position.title}</div>
+            <button onClick={() => toggleDetails(index)} className='p-2 bg-stone-900 text-white rounded-full'>
+              {expandedIndex === index ? <FaChevronUp /> : <FaChevronDown />}
+            </button>
+          </div>
+          <div className="text-gray-600">
+            {expandedIndex === index && (
+              <div>
+                <p>{position.location}</p>
+                <p>{position.type}</p>
+                <p>{position.details}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
     </div>
+    <div className="hidden md:block">
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead>
+          <tr>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+            <th className="px-6 py-3"></th>
+          </tr>
+        </thead>
+        <tbody className="bg-white font-sans divide-y divide-gray-200">
+          {filteredPositions.map((position, index) => (
+            <React.Fragment key={index}>
+              <tr className={`${expandedIndex === index ? "scale-105 transition-all duration-500 bg-stone-200" : " scale-100 transition-all duration-500"}`}>
+                <td className="px-6 py-4 whitespace-nowrap text-2xl font-bold">{position.title}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{position.location}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{position.type}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <button onClick={() => toggleDetails(index)} className='p-2 bg-stone-900 text-white rounded-full'>
+                    {expandedIndex === index ? <FaChevronUp /> : <FaChevronDown />}
+                  </button>
+                </td>
+              </tr>
+              {expandedIndex === index && (
+                <tr>
+                  <td colSpan="2" className="px-6 py-4 whitespace-wrap">
+                    <div className="text-gray-600">{position.details}</div>
+                  </td>
+                  <td colSpan="2" className="px-6 py-4 whitespace-wrap">
+                    <button className='text-white bg-black px-2 py-1 rounded-lg'>Apply Now</button>
+                  </td>
+                </tr>
+              )}
+            </React.Fragment>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
             {isModalOpen && (
       <div
       className="fixed inset-0 flex items-center justify-center bg-stone-950 bg-opacity-80 backdrop-blur-sm transition-opacity duration-500 ease-in-out"
