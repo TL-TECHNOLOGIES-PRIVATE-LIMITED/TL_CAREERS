@@ -12,14 +12,14 @@ function Navbar() {
 
   return (
     <header className="w-full md:h-fit p-2 sm:p-5 md:px-20 lg:px-32 h-fit relative bg-white bg-opacity-80 overflow-x-hidden">
-      {/* <video
+      <video
         autoPlay
         loop
         muted
         className="absolute inset-0 w-full h-full object-cover z-0"
       >
         <source src="https://cdn.dribbble.com/userupload/6750829/file/original-78a9959381283af7f491c42b56ae496a.mp4" type="video/mp4" />
-      </video> */}
+      </video>
       <div className='w-full flex justify-between items-center z-50 relative'>
         <div className='flex justify-center items-end'>
           <img src={logo} className='h-10 w-auto' alt='tl logo'/>
@@ -40,7 +40,11 @@ function Navbar() {
           </button>
         </ul>
         <button onClick={toggleMenu} className='w-fit p-1 flex md:hidden sm:hidden bg-stone-200 z-50 text-red-400 rounded-lg'>
-            {menuOpen?<CgDetailsMore />:<IoClose/>}
+            {menuOpen?
+            <IoClose/>
+            :
+            <CgDetailsMore />
+            }
           
           
         </button>
@@ -54,10 +58,8 @@ function Navbar() {
         className="  flex items-start justify-start flex-col text-stone-100 md:text-[110px] text-[40px] font-light drop-shadow-xl shadow-black"
       >
        <p>Careers</p> 
-       <p className='text-start w-fit max-w-[800px] text-xl font-thin ' style={{fontFamily:'"Outfit", sans-serif'}}>
-            <span className='text-black text-3xl' >"</span>
+       <p className='text-start w-fit max-w-[800px] text-xl font-thin backdrop-blur-3xl bg-stone-100 bg-opacity-80' style={{fontFamily:'"Outfit", sans-serif'}}>
             we are looking for passionate candidates to join us in our mission. We value flat hierarchies, clear communication, and full ownership and responsibility
-            <span className='text-black text-3xl'>"</span>
           </p> 
       </div>
       <div className={`absolute top-0 md:hidden left-0 w-full flex justify-center items-center p-4 bg-white h-full text-black z-40 transform transition-transform duration-300 ${menuOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}`}>
